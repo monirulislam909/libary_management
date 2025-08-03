@@ -13,7 +13,10 @@ class StudentController extends Controller
      */
     public function index()
     {
-        return view('student.index');
+        $alldata = DB::table('students')->get();
+        return view('student.index', [
+            "data" => $alldata
+        ]);
     }
 
     /**

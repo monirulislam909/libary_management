@@ -13,7 +13,10 @@ class BookController extends Controller
      */
     public function index()
     {
-        return view('book.index');
+        $alldata = DB::table('book')->get();
+        return view('book.index', [
+            "data" => $alldata
+        ]);
     }
 
     /**
