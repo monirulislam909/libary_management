@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -12,7 +13,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        return view('student.index');
     }
 
     /**
@@ -20,7 +21,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        return view('student.create');
     }
 
     /**
@@ -28,7 +29,31 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:students,email', // or your table name
+            'phone' => 'required|string|min:11|max:15',
+            'location' => 'required|string',
+        ]);
+        $fileName = null;
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = time() . '_' . $file->getClientOriginalName(); // or use uniqid()
+            $file->move(public_path('studentPhoto'), $fileName);
+        }
+
+        DB::table('students')->insert([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'location' => $request->location,
+            'photo' => $fileName,
+            'created_at' => now()
+
+        ]);
+
+        return redirect()->back()->with('success', 'Student created successfully');
     }
 
     /**
