@@ -6,16 +6,16 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class BookController extends Controller
+class BooksController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $alldata = DB::table('book')->get();
+        $old = DB::table('books')->get();
         return view('book.index', [
-            "data" => $alldata
+            'data' => $old
         ]);
     }
 
@@ -32,14 +32,14 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        // Validation
         $request->validate([
             'title' => 'required',
             'author' => 'required',
-
-            'cover' => 'nullable',
-            'isbn' => 'required|unique:book,isbn',
+            'cover' => 'nullable',  // Validate as image file
+            'isbn' => 'required|unique:books,isbn',
             'copies' => 'required',
-            'availablecopies' => 'required',
+            'available_copy' => 'required',
         ]);
 
         $cover_photo = null;
@@ -50,17 +50,18 @@ class BookController extends Controller
             $file->move(public_path('bookPhoto'), $cover_photo);
         }
 
-        DB::table('book')->insert([
-            "title" => $request->title,
-            "author" => $request->author,
-            "isbn" => $request->isbn,
-            "copies" => $request->copies,
-            "availableCopy" => $request->availablecopies,
-            "cover" => $cover_photo,
-            "created_at" => now(),
+        DB::table('books')->insert([
+            'title' => $request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'copies' => $request->copies,
+            'available_copy' => $request->available_copy,
+            'cover' => $cover_photo,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'book create successfully');
+        return redirect()->back()->with('success', 'Book created successfully');
     }
 
     /**
@@ -68,7 +69,9 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        return view('book.show', [
+            'data' => $book
+        ]);
     }
 
     /**
@@ -92,6 +95,11 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        if ($book->cover && file_exists(public_path('bookPhoto/' . $book->cover))) {
+            unlink(public_path('bookPhoto/' . $book->cover));
+        }
+
+        $book->delete();
+        return redirect()->route('student.index')->with('success', 'student delete successfully');
     }
 }

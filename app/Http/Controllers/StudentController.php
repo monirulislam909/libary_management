@@ -64,7 +64,9 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return view('student.show', [
+            'data' => $student
+        ]);
     }
 
     /**
@@ -88,6 +90,10 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        if ($student->photo && file_exists(public_path('studentPhoto/' . $student->photo))) {
+            unlink(public_path('studentPhoto/' . $student->photo));
+        }
+        $student->delete();
+        return redirect()->route('student.index')->with('success', 'student delete successfully');
     }
 }

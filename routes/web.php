@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\BookController;
+use App\Http\Controllers\BooksController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,4 +10,4 @@ Route::get('/', function () {
 
 
 Route::resource('/student', StudentController::class);
-Route::resource('/book', BookController::class);
+Route::resource('/book', BooksController::class);

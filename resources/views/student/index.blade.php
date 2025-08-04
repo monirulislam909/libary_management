@@ -15,6 +15,7 @@
 							<div class="col">
 								<h3 class="page-title">All Student List</h3>
 								
+							
 							</div>
 						</div>
 					</div>
@@ -49,9 +50,16 @@
 	<td>{{$student->location}}</td>
 	<td><img style="width: 50px" src="{{ asset('studentPhoto/'.$student->photo) }}" alt=""></td>
 	<td>
-		<a class="btn btn-success"  href="#">view</a>
+		<a class="btn btn-success"  href="{{ route('student.show', $student->id) }}">view</a>
 		<a class="btn btn-warning"  href="#">edit</a>
-		<a class="btn btn-danger" href="#">delete</a>
+		
+		<div class="del d-inline-block">
+			<form action="{{ route('student.destroy',$student->id) }}" method="POST">
+				@csrf
+				@method('DELETE')
+				<button type="submit" class="btn btn-danger d-inline-block">delete</button>
+			</form>
+		</div>
 	</td>
 	
 </tr>

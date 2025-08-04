@@ -11,7 +11,7 @@
 					<div class="page-header">
 						<div class="row">
 							<div class="col">
-								<h3 class="page-title">All Student List</h3>
+								<h3 class="page-title">All Book List</h3>
 								
 							</div>
 						</div>
@@ -47,12 +47,19 @@
 													<td>{{$book->author}}</td>
 													<td>{{$book->isbn}}</td>
 													<td>{{$book->copies}}</td>
-													<td>{{$book->availableCopy}}</td>
+													<td>{{$book->available_copy}}</td>
 													<td><img style="width: 50px" src="{{ asset('bookPhoto/'.$book->cover) }}" alt=""></td>
 													<td>
-	 												<a class="btn btn-success"  href="#">view</a>
+	 												<a class="btn btn-success"  href="{{ route('book.show',$book->id) }}">view</a>
 	 												<a class="btn btn-warning"  href="#">edit</a>
-	 												<a class="btn btn-danger" href="#">delete</a>
+	 												<div class="delete d-inline-block">
+														<form action="{{ route('book.destroy',$book->id) }}" method="POST">
+															@csrf
+															@method("DELETE")
+															<button class="btn btn-danger" type="submit">delete</button>
+
+														</form>
+													</div>
 	 											</td>
 													
 												</tr>
