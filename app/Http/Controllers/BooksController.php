@@ -79,7 +79,9 @@ class BooksController extends Controller
      */
     public function edit(Book $book)
     {
-        //
+        return view('book.edit', [
+            'data' => $book
+        ]);
     }
 
     /**
@@ -87,7 +89,38 @@ class BooksController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'author' => 'required',
+            'cover' => 'nullable',  // Validate as image file
+            'isbn' => 'required',
+            'copies' => 'required',
+            'available_copy' => 'required',
+        ]);
+
+        $data = [
+            'title' => $request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'copies' => $request->copies,
+            'available_copy' => $request->available_copy,
+
+        ];
+
+        if ($request->hasFile('cover')) {
+            $file = $request->file('cover');
+            $cover_photo = time() . "_" . $file->getClientOriginalName();
+            if ($book->cover && file_exists(public_path('bookPhoto/' . $book->cover))) {
+                unlink(public_path('bookPhoto/' . $book->cover));
+            }
+            $file->move(public_path('bookPhoto'), $cover_photo);
+            $data['cover'] = $cover_photo;
+        }
+
+
+        $book->update($data);
+
+        return redirect()->back()->with('success', 'Book updated successfully');
     }
 
     /**

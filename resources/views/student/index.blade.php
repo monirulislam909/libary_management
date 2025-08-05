@@ -51,7 +51,7 @@
 	<td><img style="width: 50px" src="{{ asset('studentPhoto/'.$student->photo) }}" alt=""></td>
 	<td>
 		<a class="btn btn-success"  href="{{ route('student.show', $student->id) }}">view</a>
-		<a class="btn btn-warning"  href="#">edit</a>
+		<a class="btn btn-warning"  href="{{ route('student.edit',$student->id) }}">edit</a>
 		
 		<div class="del d-inline-block">
 			<form action="{{ route('student.destroy',$student->id) }}" method="POST">

@@ -14,7 +14,7 @@
 						<div class="col-sm-12 justify-center">
                             
                                 
-                            @endif
+                           
 							<div class="card" style="width: 600px">
 						<div class="card-header">
                             @if ($data->photo)

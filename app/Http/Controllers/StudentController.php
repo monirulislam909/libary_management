@@ -74,7 +74,9 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        return view('student.edit', [
+            'data' => $student
+        ]);
     }
 
     /**
@@ -82,7 +84,33 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'location' => 'required',
+            'photo' => 'nullable',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'location' => $request->location,
+        ];
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = time() . '_' . $file->getClientOriginalName(); // or use uniqid()
+            if ($student->photo && file_exists(public_path('studentPhoto/' . $student->photo))) {
+                unlink(public_path('studentPhoto/' . $student->photo));
+            }
+            $file->move(public_path('studentPhoto'), $fileName);
+            $data['photo'] = $fileName;
+        }
+        $student->update($data);
+
+        return redirect()->back()->with('success', 'Student updated successfully');
     }
 
     /**

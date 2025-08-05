@@ -51,7 +51,7 @@
 													<td><img style="width: 50px" src="{{ asset('bookPhoto/'.$book->cover) }}" alt=""></td>
 													<td>
 	 												<a class="btn btn-success"  href="{{ route('book.show',$book->id) }}">view</a>
-	 												<a class="btn btn-warning"  href="#">edit</a>
+	 												<a class="btn btn-warning"  href="{{ route('book.edit',$book->id) }}">edit</a>
 	 												<div class="delete d-inline-block">
 														<form action="{{ route('book.destroy',$book->id) }}" method="POST">
 															@csrf
